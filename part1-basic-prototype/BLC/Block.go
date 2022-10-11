@@ -19,6 +19,8 @@ type Block struct {
 	Timestamp int64
 	// 5. hash
 	Hash []byte
+	// 6. 工作量证明
+	Nonce int64
 }
 
 // SetHash 设置 Block 的 hash
@@ -49,7 +51,10 @@ func NewBlock(height int64, prevBlock []byte, data string) *Block {
 		Data:          []byte(data),
 		Timestamp:     time.Now().Unix(),
 	}
-	block.SetHash()
+	pow := NewProofOfWork(block)
+	hash, nonce := pow.Run()
+	block.Hash = hash
+	block.Nonce = nonce
 
 	return block
 }
