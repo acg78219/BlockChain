@@ -51,7 +51,9 @@ func NewBlock(height int64, prevBlock []byte, data string) *Block {
 		Data:          []byte(data),
 		Timestamp:     time.Now().Unix(),
 	}
+	// 工作量证明
 	pow := NewProofOfWork(block)
+	// 不断挖矿进行工作
 	hash, nonce := pow.Run()
 	block.Hash = hash
 	block.Nonce = nonce
