@@ -8,13 +8,25 @@ import (
 )
 
 // 256位 hash 中前面至少要有 16 位的 0，表示难度
-const targetBit = 16
+const targetBit = 10
 
 type ProofOfWork struct {
 	// 所在的区块
 	Block *Block
 	// 大数据存储
 	Target *big.Int
+}
+
+// IsValid 判断挖矿结果是否有效
+func (pow *ProofOfWork) IsValid() bool {
+	var hashInt big.Int
+	hashInt.SetBytes(pow.Block.Hash)
+
+	if pow.Target.Cmp(&hashInt) == 1 {
+		return true
+	} else {
+		return false
+	}
 }
 
 func (pow *ProofOfWork) prepareData(nonce int) []byte {

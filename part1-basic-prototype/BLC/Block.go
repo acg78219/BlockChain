@@ -3,6 +3,8 @@ package BLC
 import (
 	"bytes"
 	"crypto/sha256"
+	"encoding/gob"
+	"log"
 	"strconv"
 	"time"
 )
@@ -67,4 +69,32 @@ func CreateFirstBlock(data string) *Block {
 		// Hash 是 64 位的，而 byte 中一个数字表示 2 位，所以需要 32 个 0
 		[]byte{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 		data)
+}
+
+// Serialize 将 block 序列化为字节数组
+func (block *Block) Serialize() []byte {
+	var result bytes.Buffer
+
+	encoder := gob.NewEncoder(&result)
+
+	// 将 block 序列化
+	err := encoder.Encode(block)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	return result.Bytes()
+}
+
+func DeserializeBlock(blockBytes []byte) *Block {
+	var block Block
+
+	decoder := gob.NewDecoder(bytes.NewReader(blockBytes))
+	// 将 block 反序列化
+	err := decoder.Decode(&block)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	return &block
 }
