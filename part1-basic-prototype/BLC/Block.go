@@ -74,7 +74,7 @@ func CreateFirstBlock(data string) *Block {
 // Serialize 将 block 序列化为字节数组
 func (block *Block) Serialize() []byte {
 	var result bytes.Buffer
-
+	
 	encoder := gob.NewEncoder(&result)
 
 	// 将 block 序列化
